@@ -1,15 +1,18 @@
 import React from 'react';
-import './App.css';
+import { Container } from 'react-bootstrap'
 
+import './App.css';
 import CompaniesProvider from './context/companies-context'
 import CompaniesList from './components/CopmaniesList'
 
 const App = () => {
 
   return (
-    <CompaniesProvider>
-      <CompaniesList />
-    </CompaniesProvider>
+    <Container>
+      <CompaniesProvider>
+        <CompaniesList />
+      </CompaniesProvider>
+    </Container>
   );
 }
 
