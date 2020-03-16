@@ -16,7 +16,7 @@ export default props => {
         async function fetchData() {
             await fetch('https://recruitment.hal.skygate.io/companies')
                 .then(r => r.json())
-                .then(response => companiesList = response)
+                .then(response => companiesList = response.slice(0, 5))
             setCompanies(companiesList)
             let incomesDatas = []
             for (let i = 0; i < companiesList.length; i++) {
@@ -35,7 +35,7 @@ export default props => {
                     let vv = Object.assign(item, incomesDatas[index], { totalIncomes: counter })
                     newState.push(vv)
                     newState.sort((a, b) => {
-                        return a.totalIncomes - b.totalIncomes
+                        return b.totalIncomes - a.totalIncomes
                     })
                 })
                 return newState
