@@ -2,10 +2,10 @@ import React from 'react';
 
 import { Pagination } from 'react-bootstrap'
 
-const Paginate = ({ companiesPerPage, totalCompanies, paginate }) => {
-    let active = 2;
+const Paginate = ({ companiesPerPage, totalCompanies, paginate, activePage }) => {
+    const active = activePage;
     const items = []
-    for (let number = 1; Math.ceil(totalCompanies / companiesPerPage); number++) {
+    for (let number = 1; number <= Math.ceil(totalCompanies / companiesPerPage); number++) {
         items.push(
             <Pagination.Item key={number} active={number === active} onClick={() => paginate(number)}>
                 {number}
@@ -13,7 +13,7 @@ const Paginate = ({ companiesPerPage, totalCompanies, paginate }) => {
         );
     }
 
-    return <Pagination>
+    return <Pagination className="d-flex flex-wrap">
         {items}
     </Pagination>
 

@@ -6,7 +6,7 @@ import { CompaniesContext } from '../../context/companies-context'
 
 const CompaniesList = () => {
     const [currentPage, setCurrentPage] = useState(1)
-    const [companiesPerPage, setCompaniesPerPage] = useState(1)
+    const [companiesPerPage] = useState(10)
 
     const companies = useContext(CompaniesContext).companies
     const searchedCompanies = useContext(CompaniesContext).searchedCompanies
@@ -17,6 +17,7 @@ const CompaniesList = () => {
         searchCompany(e.target.value)
         if (e.target.value !== '') {
             setTouched(true)
+            setCurrentPage(1)
         } else {
             setTouched(false)
         }
@@ -35,8 +36,9 @@ const CompaniesList = () => {
         />
         <Paginate
             companiesPerPage={companiesPerPage}
-            totalCompanies={companies.length}
+            totalCompanies={searchedCompanies.length === 0 ? companies.length : searchedCompanies.length}
             paginate={paginate}
+            activePage={currentPage}
         />
     </>
 }

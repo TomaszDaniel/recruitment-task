@@ -16,7 +16,7 @@ export default props => {
         async function fetchData() {
             await fetch('https://recruitment.hal.skygate.io/companies')
                 .then(r => r.json())
-                .then(response => companiesList = response.slice(0, 5))
+                .then(response => companiesList = response)
             setCompanies(companiesList)
             let incomesDatas = []
             for (let i = 0; i < companiesList.length; i++) {
@@ -27,7 +27,6 @@ export default props => {
             setCompanies(() => {
                 let newState = []
                 companiesList.forEach((item, index) => {
-                    console.log(incomesDatas[index])
                     let counter = 0
                     incomesDatas[index].incomes.forEach(el => {
                         counter += parseInt(el.value)
