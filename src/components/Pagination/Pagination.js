@@ -9,12 +9,12 @@ const Paginate = ({ companiesPerPage, totalCompanies, paginate }) => {
         items.push(
             <Pagination.Item key={number} active={number === active} onClick={() => paginate(number)}>
                 {number}
-            </Pagination.Item>,
+            </Pagination.Item>
         );
     }
 
     return <Pagination>
-        {/* {items} */}
+        {items}
     </Pagination>
 
 }
