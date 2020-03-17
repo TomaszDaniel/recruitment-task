@@ -18,8 +18,6 @@ const App = () => {
               <CompaniesList />
             </Route>
             <Route path="/company/:id" component={Company} />>
-              {/* <Company />
-            </Route> */}
           </Switch>
         </CompaniesProvider>
       </Container>

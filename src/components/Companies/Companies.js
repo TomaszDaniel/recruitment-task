@@ -16,7 +16,7 @@ const CompaniesList = ({ companies }) => {
                 <td>{company.name}</td>
                 <td>{company.city}</td>
                 <td>{(dataLoaded) ? company.totalIncomes : <Spinner animation="border" />}</td>
-                <td>
+                <td >
                     <Link to={{
                         pathname: `/company/${company.id}`,
                         params: {
@@ -31,7 +31,7 @@ const CompaniesList = ({ companies }) => {
     }
     return (
         <div>
-            <Table striped bordered hover size="sm" responsive="sm">
+            <Table striped bordered hover size="sm" className="text-center" responsive="sm">
                 <thead>
                     <tr>
                         <th>Id</th>
