@@ -99,22 +99,21 @@ const Company = (props) => {
     }
 
     return <>
-        <Card>
+        <Card className="my-4">
             <Card.Body>
                 <Card.Title>{company.name}</Card.Title>
                 <Card.Subtitle className="mb-2 text-muted">City: {company.city}</Card.Subtitle>
                 <Card.Text>Total Incomes: {company.totalIncomes}</Card.Text>
                 <Card.Text>Average Incomes: {(company.totalIncomes / company.incomes.length).toFixed(2)}</Card.Text>
                 <Card.Text>Last Month Incomes: {getLastMonthIncomes()}</Card.Text>
-
-
                 <Button
                     onClick={() => setOpen(!open)}
                     aria-controls="example-collapse-text"
                     aria-expanded={open}
                 >
                     Show Custom Data
-      </Button>
+                </Button>
+                <Button variant="primary" className="ml-3" onClick={() => getMonthlyIncomes()}>Get Chart</Button>
                 <Collapse in={open}>
                     <div id="example-collapse-text">
                         <Button variant="primary" size="sm" className="my-4 mx-2" onClick={() => getCustomData()}>Get</Button>
@@ -138,12 +137,9 @@ const Company = (props) => {
                         <Card.Text>Average Custom Incomes: {!!averageCustomIncomes ? averageCustomIncomes : "---"}</Card.Text>
                     </div>
                 </Collapse>
-
-
-
-
-                <Button variant="primary" className="ml-3" onClick={() => getMonthlyIncomes()}>Get Chart</Button>
-                <Button variant="primary" onClick={() => props.history.push("/")}>Back to Main Page</Button>
+                <div className="my-3">
+                    <Button variant="outline-primary" onClick={() => props.history.push("/")}>Back to Main Page</Button>
+                </div>
             </Card.Body>
         </Card >
         {showChart && <Chart

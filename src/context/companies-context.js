@@ -18,7 +18,7 @@ export default props => {
         async function fetchData() {
             await fetch('https://recruitment.hal.skygate.io/companies')
                 .then(r => r.json())
-                .then(response => companiesList = response.slice(0, 5))
+                .then(response => companiesList = response)
             setCompanies(companiesList)
             let incomesDatas = []
             for (let i = 0; i < companiesList.length; i++) {
