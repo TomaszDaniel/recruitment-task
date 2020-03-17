@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Button } from 'react-bootstrap'
 import { Redirect } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
+import Chart from "react-apexcharts";
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -10,6 +11,27 @@ const Company = (props) => {
     const [averageCustomIncomes, setAverageCustomIncomes] = useState()
     const [startDate, setStartDate] = useState(new Date("2019/01/01"));
     const [endDate, setEndDate] = useState(new Date());
+    const [showChart, setShowChart] = useState(false)
+    const [chart, setChart] = useState({
+        options: {
+            chart: {
+                id: "basic-bar"
+            },
+            xaxis: {
+                categories: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+            }
+        },
+        series: [
+            {
+                name: "",
+                data: []
+            }
+        ]
+    })
+
+    // useEffect(() => {
+    //     getCustomData()
+    // }, [startDate, endDate])
 
     if (props.location.params === undefined) {
         return <Redirect to="/" />
@@ -27,6 +49,29 @@ const Company = (props) => {
         })
     }
 
+    const getMonthlyIncomes = () => {
+        const dataPerMonth = []
+        for (let i = 0; i <= 11; i++) {
+            let incomesPerMonth = 0
+            company.incomes.forEach(el => {
+                if (new Date(el.date).getMonth() === i) {
+                    incomesPerMonth += Number(el.value)
+                }
+            })
+            dataPerMonth.push(incomesPerMonth.toFixed())
+        }
+        setChart(prev => {
+            return {
+                ...prev,
+                series: [{
+                    name: "month-incomes",
+                    data: dataPerMonth
+                }],
+            }
+        })
+        setShowChart(true)
+    }
+
     const changePicker = (date, picker) => {
         switch (picker) {
             case 'startPicker':
@@ -39,9 +84,13 @@ const Company = (props) => {
                 setStartDate(new Date("2019/01/01"))
                 setEndDate(new Date())
         }
+        console.log(startDate)
+        getCustomData()
     }
 
     const getCustomData = () => {
+        getMonthlyIncomes()
+        console.log('hello')
         let customData = []
         customData = company.incomes.filter(el => {
             const dates = new Date(el.date)
@@ -57,34 +106,43 @@ const Company = (props) => {
 
     getLastMonthIncomes()
 
-    return <Card>
-        <Card.Body>
-            <Card.Title>{company.name}</Card.Title>
-            <Card.Subtitle className="mb-2 text-muted">City: {company.city}</Card.Subtitle>
-            <Card.Text>Total Incomes: {company.totalIncomes}</Card.Text>
-            <Card.Text>Average Incomes: {(company.totalIncomes / company.incomes.length).toFixed(2)}</Card.Text>
-            <Card.Text>Last Month Incomes: {lastMonthIncomes.toFixed(2)}</Card.Text>
-            <Button variant="primary" onClick={() => props.history.push("/")}>Back to Main Page</Button>
-            <Button variant="primary" className="ml-3" onClick={() => getCustomData()}>Get Custom Data</Button>
-            <DatePicker
-                selected={startDate}
-                onChange={date => changePicker(date, "startPicker")}
-                selectsStart
-                startDate={startDate}
-                endDate={endDate}
-            />
-            <DatePicker
-                selected={endDate}
-                onChange={date => changePicker(date, "endPicker")}
-                selectsEnd
-                startDate={startDate}
-                endDate={endDate}
-                minDate={startDate}
-            />
-            <Card.Text>Total Custom Incomes: {(!!totalCustomIncomes ? totalCustomIncomes : "---")}</Card.Text>
-            <Card.Text>Average Custom Incomes: {!!averageCustomIncomes ? averageCustomIncomes : "---"}</Card.Text>
-        </Card.Body>
-    </Card >
+    return <>
+        <Card>
+            <Card.Body>
+                <Card.Title>{company.name}</Card.Title>
+                <Card.Subtitle className="mb-2 text-muted">City: {company.city}</Card.Subtitle>
+                <Card.Text>Total Incomes: {company.totalIncomes}</Card.Text>
+                <Card.Text>Average Incomes: {(company.totalIncomes / company.incomes.length).toFixed(2)}</Card.Text>
+                <Card.Text>Last Month Incomes: {lastMonthIncomes.toFixed(2)}</Card.Text>
+                <Button variant="primary" onClick={() => props.history.push("/")}>Back to Main Page</Button>
+                <Button variant="primary" className="ml-3" onClick={() => getCustomData()}>Get Custom Data</Button>
+                <Button variant="primary" className="ml-3" onClick={() => getMonthlyIncomes()}>Get Chart</Button>
+                <DatePicker
+                    selected={startDate}
+                    onChange={date => changePicker(date, "startPicker")}
+                    selectsStart
+                    startDate={startDate}
+                    endDate={endDate}
+                />
+                <DatePicker
+                    selected={endDate}
+                    onChange={date => changePicker(date, "endPicker")}
+                    selectsEnd
+                    startDate={startDate}
+                    endDate={endDate}
+                    minDate={startDate}
+                />
+                <Card.Text>Total Custom Incomes: {(!!totalCustomIncomes ? totalCustomIncomes : "---")}</Card.Text>
+                <Card.Text>Average Custom Incomes: {!!averageCustomIncomes ? averageCustomIncomes : "---"}</Card.Text>
+            </Card.Body>
+        </Card >
+        {showChart && <Chart
+            options={chart.options}
+            series={chart.series}
+            type="bar"
+            style={{ width: "100%" }}
+        />}
+    </>
 
 }
 
