@@ -31,9 +31,9 @@ export default props => {
                 companiesList.forEach((item, index) => {
                     let counter = 0
                     incomesDatas[index].incomes.forEach(el => {
-                        counter += parseInt(el.value)
+                        counter += Number(el.value)
                     })
-                    let vv = Object.assign(item, incomesDatas[index], { totalIncomes: counter })
+                    let vv = Object.assign(item, incomesDatas[index], { totalIncomes: counter.toFixed(2) })
                     newState.push(vv)
                     newState.sort((a, b) => {
                         return b.totalIncomes - a.totalIncomes

@@ -1,22 +1,91 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, Button } from 'react-bootstrap'
+import { Redirect } from 'react-router-dom'
+import DatePicker from 'react-datepicker'
 
+import "react-datepicker/dist/react-datepicker.css";
 
 const Company = (props) => {
+    const [totalCustomIncomes, setTotalCustomIncomes] = useState()
+    const [averageCustomIncomes, setAverageCustomIncomes] = useState()
+    const [startDate, setStartDate] = useState(new Date("2019/01/01"));
+    const [endDate, setEndDate] = useState(new Date());
+
+    if (props.location.params === undefined) {
+        return <Redirect to="/" />
+    }
+
     const { company } = props.location.params
-    console.log(company)
+
+    let lastMonthIncomes = 0
+    const getLastMonthIncomes = () => {
+        const data = new Date()
+        company.incomes.forEach((comp) => {
+            if ((new Date(comp.date).getFullYear() === data.getFullYear() - 1) && (new Date(comp.date).getMonth() === data.getMonth() - 1)) {
+                return lastMonthIncomes += Number(comp.value)
+            }
+        })
+    }
+
+    const changePicker = (date, picker) => {
+        switch (picker) {
+            case 'startPicker':
+                setStartDate(date)
+                break;
+            case 'endPicker':
+                setEndDate(date)
+                break;
+            default:
+                setStartDate(new Date("2019/01/01"))
+                setEndDate(new Date())
+        }
+    }
+
+    const getCustomData = () => {
+        let customData = []
+        customData = company.incomes.filter(el => {
+            const dates = new Date(el.date)
+            return (dates.getTime() > startDate.getTime()) && (dates.getTime() < endDate.getTime())
+        })
+        let totalCustomIncomes = 0
+        customData.forEach(el => {
+            totalCustomIncomes += Number(el.value)
+        })
+        setTotalCustomIncomes(totalCustomIncomes.toFixed(2))
+        setAverageCustomIncomes((totalCustomIncomes / customData.length).toFixed(2))
+    }
+
+    getLastMonthIncomes()
+
     return <Card>
         <Card.Body>
             <Card.Title>{company.name}</Card.Title>
-            <Card.Subtitle className="mb-2 text-muted">{company.city}</Card.Subtitle>
-            <Card.Text></Card.Text>
-            <Card.Text>
-                Some quick example text to build on the card title and make up the bulk of
-                the card's content.
-    </Card.Text>
-            <Button variant="primary">See chart</Button>
+            <Card.Subtitle className="mb-2 text-muted">City: {company.city}</Card.Subtitle>
+            <Card.Text>Total Incomes: {company.totalIncomes}</Card.Text>
+            <Card.Text>Average Incomes: {(company.totalIncomes / company.incomes.length).toFixed(2)}</Card.Text>
+            <Card.Text>Last Month Incomes: {lastMonthIncomes.toFixed(2)}</Card.Text>
+            <Button variant="primary" onClick={() => props.history.push("/")}>Back to Main Page</Button>
+            <Button variant="primary" className="ml-3" onClick={() => getCustomData()}>Get Custom Data</Button>
+            <DatePicker
+                selected={startDate}
+                onChange={date => changePicker(date, "startPicker")}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+            />
+            <DatePicker
+                selected={endDate}
+                onChange={date => changePicker(date, "endPicker")}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                minDate={startDate}
+            />
+            <Card.Text>Total Custom Incomes: {(!!totalCustomIncomes ? totalCustomIncomes : "---")}</Card.Text>
+            <Card.Text>Average Custom Incomes: {!!averageCustomIncomes ? averageCustomIncomes : "---"}</Card.Text>
         </Card.Body>
-    </Card>
+    </Card >
+
 }
 
 export default Company
