@@ -1,9 +1,12 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
+import { Link } from 'react-router-dom'
 
 import { CompaniesContext } from '../../context/companies-context'
-import { Button, Table } from 'react-bootstrap';
+import { Button, Table, Spinner } from 'react-bootstrap';
 
 const CompaniesList = ({ companies }) => {
+
+    const { dataLoaded } = useContext(CompaniesContext)
 
     let list
     if (companies.length !== 0) {
@@ -12,21 +15,30 @@ const CompaniesList = ({ companies }) => {
                 <td>{company.id}</td>
                 <td>{company.name}</td>
                 <td>{company.city}</td>
-                <td>{(company.totalIncomes) && company.totalIncomes}</td>
-                <td><Button>View</Button></td>
-            </tr>
+                <td>{(dataLoaded) ? company.totalIncomes : <Spinner animation="border" />}</td>
+                <td>
+                    <Link to={{
+                        pathname: `/company/${company.id}`,
+                        params: {
+                            company
+                        }
+                    }}>
+                        <Button size="sm" disabled={!dataLoaded}>View details</Button>
+                    </Link>
+                </td>
+            </tr >
         })
     }
-
     return (
         <div>
-            <Table striped bordered hover size="sm" variant="dark" responsive="sm">
+            <Table striped bordered hover size="sm" responsive="sm">
                 <thead>
                     <tr>
                         <th>Id</th>
                         <th>Name</th>
                         <th>City</th>
                         <th>Total Incomes</th>
+                        <th>Details</th>
                     </tr>
                 </thead>
                 <tbody>

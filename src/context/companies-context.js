@@ -3,20 +3,22 @@ import React, { useState, useEffect, createContext } from "react";
 export const CompaniesContext = createContext({
     companies: [],
     searchCompany: () => { },
-    searchedCompanies: []
+    searchedCompanies: [],
+    loading: false
 })
 
 export default props => {
 
     const [companies, setCompanies] = useState([])
     const [searchedCompanies, setSearchedCompanies] = useState([])
+    const [dataLoaded, setDataLoaded] = useState(false)
 
     useEffect(() => {
         let companiesList
         async function fetchData() {
             await fetch('https://recruitment.hal.skygate.io/companies')
                 .then(r => r.json())
-                .then(response => companiesList = response)
+                .then(response => companiesList = response.slice(0, 5))
             setCompanies(companiesList)
             let incomesDatas = []
             for (let i = 0; i < companiesList.length; i++) {
@@ -39,6 +41,7 @@ export default props => {
                 })
                 return newState
             })
+            setDataLoaded(true)
         }
         fetchData()
     }, [])
@@ -49,7 +52,7 @@ export default props => {
     }
 
     return (
-        <CompaniesContext.Provider value={{ companies, searchCompany, searchedCompanies }}>
+        <CompaniesContext.Provider value={{ companies, searchCompany, searchedCompanies, dataLoaded }}>
             {props.children}
         </CompaniesContext.Provider>
     )

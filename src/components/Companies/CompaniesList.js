@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { Form } from 'react-bootstrap'
 
 import Companies from './Companies'
 import Paginate from '../Pagination/Pagination'
@@ -8,9 +9,7 @@ const CompaniesList = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [companiesPerPage] = useState(10)
 
-    const companies = useContext(CompaniesContext).companies
-    const searchedCompanies = useContext(CompaniesContext).searchedCompanies
-    const searchCompany = useContext(CompaniesContext).searchCompany
+    const { companies, searchedCompanies, searchCompany } = useContext(CompaniesContext)
     const [touched, setTouched] = useState(false)
 
     const inputChange = (e) => {
@@ -23,6 +22,10 @@ const CompaniesList = () => {
         }
     }
 
+    if (searchedCompanies.length !== 0) {
+        searchedCompanies.sort((a, b) => b.totalIncomes - a.totalIncomes)
+    }
+
     const IndexOfLastCompany = currentPage * companiesPerPage
     const IndexOfFirstCompany = IndexOfLastCompany - companiesPerPage
     const currentCompanies = (!touched ? companies.slice(IndexOfFirstCompany, IndexOfLastCompany) : searchedCompanies.slice(IndexOfFirstCompany, IndexOfLastCompany))
@@ -30,13 +33,13 @@ const CompaniesList = () => {
     const paginate = (pageNumber) => setCurrentPage(pageNumber)
 
     return <>
-        <input type="text" onChange={(e) => inputChange(e)} />
+        <Form.Control type="text" className="my-3" placeholder="Search company" onChange={(e) => inputChange(e)} />
         <Companies
             companies={currentCompanies}
         />
         <Paginate
             companiesPerPage={companiesPerPage}
-            totalCompanies={searchedCompanies.length === 0 ? companies.length : searchedCompanies.length}
+            totalCompanies={(searchedCompanies.length === 0 && !touched) ? companies.length : searchedCompanies.length}
             paginate={paginate}
             activePage={currentPage}
         />
