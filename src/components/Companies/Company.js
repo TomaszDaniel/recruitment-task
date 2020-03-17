@@ -117,7 +117,7 @@ const Company = (props) => {
       </Button>
                 <Collapse in={open}>
                     <div id="example-collapse-text">
-                        <Button variant="primary" className="m-5" onClick={() => getCustomData()}>Get</Button>
+                        <Button variant="primary" size="sm" className="my-4 mx-2" onClick={() => getCustomData()}>Get</Button>
                         <DatePicker
                             selected={startDate}
                             onChange={date => changePicker(date, "startPicker")}
@@ -132,6 +132,7 @@ const Company = (props) => {
                             startDate={startDate}
                             endDate={endDate}
                             minDate={startDate}
+                            className="ml-3"
                         />
                         <Card.Text>Total Custom Incomes: {(!!totalCustomIncomes ? totalCustomIncomes : "---")}</Card.Text>
                         <Card.Text>Average Custom Incomes: {!!averageCustomIncomes ? averageCustomIncomes : "---"}</Card.Text>
