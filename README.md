@@ -1,3 +1,5 @@
+See [DEMO](https://tomaszdaniel.github.io/recruitment-task)
+
 ## Installation
 
 Use the package manager npm to install dependencies.
