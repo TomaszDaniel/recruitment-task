@@ -1,4 +1,3 @@
-See [DEMO](https://tomaszdaniel.github.io/recruitment-task)
 
 ## Installation
 
